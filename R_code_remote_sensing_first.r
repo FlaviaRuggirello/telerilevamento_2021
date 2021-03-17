@@ -62,7 +62,7 @@ plot(p224r63_2011, col=cl)
 
 #esercizio cambiare colore 
 
-cl1 <- colorRampePalette (c("blu","yellow","grey")) (100)
+cl1 <- colorRampePalette (c("blue","yellow","grey")) (100)
 plot(p224r63_2011, col=cl) 
 
 
