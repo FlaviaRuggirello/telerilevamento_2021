@@ -35,5 +35,6 @@ p224r63_2011 <- brick("p224r63_2011_masked.grd")
 
 plot(p224r63_2011) #senza virgolette perchè è già in R e visualizzo le immagini 
 
-#dev.off() se esce -> Error in plot.new() : figure margins too large poi di nuovo plotecc
+# dev.off() se esce -> Error in plot.new() : figure margins too large poi di nuovo plotecc
+
 
