@@ -38,3 +38,33 @@ plot(p224r63_2011) #senza virgolette perchè è già in R e visualizzo le immagi
 # dev.off() se esce -> Error in plot.new() : figure margins too large poi di nuovo plotecc
 
 
+# lez. 17.03.2021
+# plottaggio singole bande 
+#colori plot 
+#B1 : BLUE
+#B2 : GREEN
+#B3 : RED 
+#B4 : NIR 
+#B5 
+#B6
+
+# colorRampePalette () possiamo cambiare e definire i colori del plot - R relaziona colore con etichetta "label" imp le virgolette 
+
+colorRampePalette(c("black","grey","light grey")) (100) #livelli scala di colori 
+
+#c () in R indica una serie di elementi -> vettore = array 
+
+cl <- colorRampePalette(c("black","grey","light grey")) (100) #livelli scala di colori  , cl nome 
+
+#ora plot con nuovi volori - richiamiamo plot 
+
+plot(p224r63_2011, col=cl) 
+
+#esercizio cambiare colore 
+
+cl1 <- colorRampePalette (c("blu","yellow","grey")) (100)
+plot(p224r63_2011, col=cl) 
+
+
+
+
