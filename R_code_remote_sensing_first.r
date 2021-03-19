@@ -63,7 +63,9 @@ plot(p224r63_2011, col=cl)
 #esercizio cambiare colore 
 
 cl1 <- colorRampePalette (c("blue","yellow","grey")) (100)
-plot(p224r63_2011, col=cl) 
+plot(p224r63_2011, col=cl) #immagine p..r immagine landsat - modis : mod... - file estensione nc derivano da un progrmma "Copernicus "
+
+
 
 
 
