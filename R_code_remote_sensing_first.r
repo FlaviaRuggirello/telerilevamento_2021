@@ -38,7 +38,8 @@ plot(p224r63_2011) #senza virgolette perchè è già in R e visualizzo le immagi
 # dev.off() se esce -> Error in plot.new() : figure margins too large poi di nuovo plotecc
 
 
-# lez. 17.03.2021
+###DAY 2 lez. 17.03.2021
+
 # plottaggio singole bande 
 #colori plot 
 #B1 : BLUE
@@ -67,6 +68,107 @@ plot(p224r63_2011, col=cl) #immagine p..r immagine landsat - modis : mod... - fi
 
 
 
+#### DAY 3 24.03.2021
+
+#SELEZIONARE LA CARTELLA DI RIFERIMENTO 
+
+setwd("~/Desktop/lab")
+
+#richiamare pacchetto "raster" e pacchetto sp , quest'ultimo fa la gestione dei dati all'interno del software
+#dati raster - matruce di numeri disposti in quadratini
+
+library(raster)
+library(sp)
+
+# con brick assegnamo un nome - visto lezioni precedenti - virgolette perchè prendiamo cose esterne a R 
+p224r63_2011 <- brick("p224r63_2011_masked.grd")
+
+#facciamo plot con ColorRampPalette 
+
+cls <- colorRampPalette(c("red","pink","orange","purple")) (200)
+plot(p224r63_2011, col=cls)
+
+#bassa riflettanza rosso - alta riflettanza viola 
+
+p224r63_2011
+
+#Bande di Landsat
+#B1 : blue
+#B2 : green 
+#B3 : red 
+#B4 : near infrared NIR 
+#B5 : middle infrared 
+#B6 : infrared ( termico - lontano) 
+#B7 : middle infrared 
+
+#plottiamo una sola banda 
+
+#Prima però ripulire la finestra grafica dev.off() 
+dev.off() 
+
+#simbolo per legare banda X a immagine satellitare "$" dollaro.
+#plottiamo B1
+
+plot(p224r63_2011$B1_sre)
+
+#plottare banda 1 con scala colori che vogliamo noi
+
+cls2 <- colorRampPalette(c("pink","green","brown","purple")) (200)
+plot(p224r63_2011, col=cls2)
+
+plot(p224r63_2011$B1_sre, col=cls2)
+dev.off()
+
+#funzione PAR - è una funzione generica - serve per fare un settaggio dei parametri grafici , di un graf che vigliamo creare 
+#possiamo plottare accanto l'immagine del B1 (banda blue ) e B2 (banda verde) - staimo facendo multiframe 
+# MultiFrame MF. 
+#Faremo poi sistema con una riga e due colonne , quindi MF = c( 1,2 ) , "c" è vettore
+# quindi grafici con una disposizione che useremo sempre 
+
+plot(p224r63_2011$B1_sre) #plotbandablu
+plot(p224r63_2011$B2_sre) #plotbanda verde 
+ #dobbiamo metterle una affianco all'altra in R , non una alla volta 
+
+#PAR ci fa mettere le imagini come vogliamo noi in pratica 
 
 
+par(mfrow=c(1,2))
+plot(p224r63_2011$B1_sre)
+plot(p224r63_2011$B2_sre)
+
+#ovviamente si puà fare anche una colonna e duerighe ecce quindi si usa par(mfcol=c(1,2))
+
+# plot the first four bands of Landsat , plot delle prime quattro bande 
+par(mfrow=c(4,1))
+plot(p224r63_2011$B1_sre)
+plot(p224r63_2011$B2_sre)
+plot(p224r63_2011$B3_sre)
+plot(p224r63_2011$B4_sre)
+
+#esercizio 2,2 colonna a riga -> quadrato 
+
+par(mfrow=c(2,2))
+plot(p224r63_2011$B1_sre)
+plot(p224r63_2011$B2_sre)
+plot(p224r63_2011$B3_sre)
+plot(p224r63_2011$B4_sre)
+
+#altro esercizio come prima ma una color rampe palette per ogni banda 
+
+par(mfrow=c(2,2))
+ 
+clb <- colorRampPalette(c("dark blue","blue","light blue")) (100)
+plot(p224r63_2011$B1_sre, col=clb)
+
+clg <- colorRampPalette(c("dark green","green","light green")) (100)
+plot(p224r63_2011$B2_sre, col=clg)
+
+clr <- colorRampPalette(c("dark red","red","pink")) (100)
+plot(p224r63_2011$B3_sre, col=clr)
+
+clnir <- colorRampPalette(c("red","orange","yellow")) (100)
+plot(p224r63_2011$B4_sre, col=clnir)
+
+#oggi quindi abbiamo imparato come predisporre in maniera riassuntiva le immagini , come plottarle
+#con che colori ecc
 
