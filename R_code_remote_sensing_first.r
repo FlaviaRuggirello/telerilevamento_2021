@@ -172,3 +172,82 @@ plot(p224r63_2011$B4_sre, col=clnir)
 #oggi quindi abbiamo imparato come predisporre in maniera riassuntiva le immagini , come plottarle
 #con che colori ecc
 
+#26.03.2021
+
+#Visualizzazione dati by RGB
+
+#richiamiamo lbreria raster 
+#setworkingdirectory --> mac 
+
+library(raster)
+setwd("~/Desktop/lab")
+
+#funzione per importare dati dall'esterno "brick" con virgolette perchè fuori R , brick la associamo a un nome 
+
+# Bande Landsat
+# B1: blu
+# B2: verde
+# B3: rosso
+# B4: infrarosso vicino
+# B5: infrarosso medio
+# B6: infrarosso termico
+# B7: infrarosso medio
+#oggi queste importanti per il lavoro
+
+#schema RGB :Red Green Blue - 3 colori fondamentali per comporre gli altri .
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin") #immagine a colori naturali - "stretch=Lin " serve per gestire tutte le fasi dei colori 
+#quini R vedrà tutti i colori che vanno dal dark blue al light blue per esempio
+
+#utilizziamo altri colori
+
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") #banda rossa
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") #branda verde 
+
+#montaggio di bande - escono pattern ecologici  ombre fiumi ecc - violA SUOLo nudo - componente agricola
+
+plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin") #tutto altro schema rispetto a prima 
+
+#ora facciamo PAR - esercizio multiframe 2x2 con queste bande 
+
+par(mfrow=c(2,2))
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") 
+plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
+
+#funzione pdf 
+pdf("firstPDF")
+par(mfrow=c(2,2))
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") 
+plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
+
+dev.off()
+
+#primo pdf in cartella lab 
+
+#prendiamo un immagine , verde fluo, i colori stavolta sono i reali non scelti 
+#stretchhistogram 
+
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") #stretch lineare 
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #stretch più pro , al centro della foresta vediamo
+#un vero e proprio polmone - aree umide - zone più vegetative ecce
+
+#quindi abbiamo fatto diversi plot strecciati e ovviamente anche i PAR - così mettiamo ciò che abbiamo ottenito 
+#visualizzato bene 
+
+# par natural colours, flase colours, and false colours with histogram stretching
+par(mfrow=c(3,1))
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #COSì VEDIAMO LE COMPONENETI DIFFERENTI DELLA FORESTA 
+#stretch ancora più ampio - tutto più PRO
+#NON SERVE LEGENDA perchè escono colori effettivi che ha deciso l'immagine - tanti strati? no legenda 
+
+#prossima volta PCA 
+
+#pacchetto RStoolbox 
+#installare pacchetto per prossima volta 
+
+install.packages("RStoolbox")
