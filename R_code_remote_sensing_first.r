@@ -231,7 +231,7 @@ dev.off()
 #stretchhistogram 
 
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") #stretch lineare 
-plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #stretch più pro , al centro della foresta vediamo
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist")plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #stretch più pro , al centro della foresta vediamo
 #un vero e proprio polmone - aree umide - zone più vegetative ecce
 
 #quindi abbiamo fatto diversi plot strecciati e ovviamente anche i PAR - così mettiamo ciò che abbiamo ottenito 
@@ -242,7 +242,7 @@ par(mfrow=c(3,1))
 plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #COSì VEDIAMO LE COMPONENETI DIFFERENTI DELLA FORESTA 
-#stretch ancora più ampio - tutto più PRO
+#stretch ancora più ampio - tutto più PRO SERVE A STITRARE I VALORI 
 #NON SERVE LEGENDA perchè escono colori effettivi che ha deciso l'immagine - tanti strati? no legenda 
 
 #prossima volta PCA 
@@ -251,3 +251,56 @@ plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #COSì VEDIAMO LE COMPONENE
 #installare pacchetto per prossima volta 
 
 install.packages("RStoolbox")
+
+#31.03.2021 - nuova lezione MULTITEMPORAL SET 
+
+library(raster)
+setwd("~/Desktop/lab")
+
+p224r63_2011 <- brick("p224r63_2011_masked.grd")
+
+#ho fatto quello che abbiamo sempre fatto nelle volte scorse
+#Ora carichiamo il 1988 dalla stessa cartella - nome uguale basta cambiare la data 
+
+#raster brick blocco di diversi raster tutti assieme che importiamo 
+
+p224r63_1988 <- brick("p224r63_1988_masked.grd")
+#stesse info periodo diverso
+
+#ora plottiamo 1988 , prima intera immagine 
+
+plot(p224r63_1988) -> #plottiamo singole bande - b1,b2,b3 ecc colori scritti sopra 
+
+#Ora plot in RGB 
+
+plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
+
+
+
+#creare un multiframe con par e poi inserire le due immagini 1988 e 2011
+
+par(mfrow=c(2,1))
+
+plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+
+par(mfrow=c(2,2))
+plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="hist")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist")
+
+#creiamo pdf
+
+ pdf("multitemp.pdf")
+> par(mfrow=c(2,2))
+> plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
+> plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+> plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="hist")
+> plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist")
+> dev.off
+
+#preso dal mio R 
+
+
