@@ -8,3 +8,4 @@ setwd("~/Desktop/lab/greenland")
 
 # install.packages("raster")
 library(raster)
+
