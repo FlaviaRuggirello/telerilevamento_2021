@@ -67,3 +67,12 @@ TGr <- stack(import)
 plot(TGr)
 
 #potrei usare lapply, invece di usare raster metto plot 
+
+
+
+plotRGB(TGr, 1, 2, 3, stretch="Lin")
+
+
+plotRGB(TGr, 1, 2, 3, stretch="Lin")
+
+#coloristRpackage -> ne parlerà
