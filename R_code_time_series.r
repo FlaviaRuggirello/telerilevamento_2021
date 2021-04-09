@@ -76,3 +76,5 @@ plotRGB(TGr, 1, 2, 3, stretch="Lin")
 plotRGB(TGr, 1, 2, 3, stretch="Lin")
 
 #coloristRpackage -> ne parlerà
+
+
