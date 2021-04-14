@@ -102,3 +102,12 @@ clb <- colorRampPalette(c("blue","white","red"))(100)
 plot(melt_amount, col=clb)
 
 levelplot(melt_amount, col.regions=clb)
+
+#14 aprile 2021
+
+#installo pacchetto "knitr"
+
+install.packages("knitr") 
+
+#ha spiegato Copernicus 
+#scaricare dati da copernicus
