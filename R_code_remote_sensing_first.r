@@ -106,7 +106,7 @@ p224r63_2011
 #Prima però ripulire la finestra grafica dev.off() 
 dev.off() 
 
-#simbolo per legare banda X a immagine satellitare "$" dollaro.
+#simbolo per legare banda X a immagine satellitare "$" dollaro - scelgo livello del multistrato che ci interessa 
 #plottiamo B1
 
 plot(p224r63_2011$B1_sre)
