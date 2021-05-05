@@ -73,3 +73,20 @@ plot(vi1, col=cl)
 
 vi2 <- spectralIndices(defor2, green = 3, red = 2, nir = 1)
 plot(vi2, col=cl)
+
+#5.05.2021
+#instal.packages(rastervid) - installiamo il pacchetto che serve per caricare --> troviamo un dataset gratuito (long term dataset )
+# library(rasterdiv) for the Worldwide NDVI
+#COS'è ndvi : 
+
+plot(copNDVI)
+
+#plottiamo semplicemente il pacchetto e compare mappa con H2O
+
+copNDVI <- reclassify(copNDVI, cbind(253:255, NA))
+plot(copNDVI)
+
+library(rasterVis)
+
+
+
