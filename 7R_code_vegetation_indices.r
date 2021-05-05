@@ -4,8 +4,8 @@ library(raster) # require(raster)
 library(RStoolbox) # for vegetation indices calculation 
 
 setwd("~/lab/") # Linux
-# setwd("C:/lab/") # Windows
-# setwd("/Users/name/Desktop/lab/") # Mac
+
+# setwd("Desktop/lab/") # Mac
 
 defor1 <- brick("defor1.jpg")
 defor2 <- brick("defor2.jpg")
