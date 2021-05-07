@@ -88,5 +88,42 @@ plot(copNDVI)
 
 library(rasterVis)
 
+# ndvi
+# (NIR-RED) / (NIR+RED)
+ndvi1 <- (defor1$defor1.1 - defor1$defor1.2) / (defor1$defor1.1 + defor1$defor1.2)
+plot(ndvi1, col=cl)
 
+# ndvi1 <- dvi1 / (defor1$defor1.1 + defor1$defor1.2)
+# plot(ndvi1, col=cl)
+
+ndvi2 <- (defor2$defor2.1 - defor2$defor2.2) / (defor2$defor2.1 + defor2$defor2.2)
+plot(ndvi2, col=cl)
+
+# ndvi1 <- dvi2 / (defor2$defor2.1 + defor1$defor2.2)
+# plot(ndvi2, col=cl)
+
+difndvi <- ndvi1 - ndvi2
+
+# dev.off()
+cld <- colorRampPalette(c('blue','white','red'))(100) 
+plot(difndvi, col=cld)
+
+
+# RStoolbox::spectralIndices
+vi1 <- spectralIndices(defor1, green = 3, red = 2, nir = 1)
+plot(vi1, col=cl)
+
+vi2 <- spectralIndices(defor2, green = 3, red = 2, nir = 1)
+plot(vi2, col=cl)
+
+# worldwide NDVI
+plot(copNDVI)
+
+
+# Pixels with values 253, 254 and 255 (water) will be set as NA’s.
+copNDVI <- reclassify(copNDVI, cbind(253:255, NA))
+plot(copNDVI)
+
+# rasterVis package needed:
+levelplot(copNDVI)
 
