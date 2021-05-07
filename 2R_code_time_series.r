@@ -1,6 +1,6 @@
 #Time series analysis
 #Greenland increase temperature
-#Data anc code from Emanuela 
+#Data and code from Emanuela Cosma 
 
 setwd("~/Desktop/lab/greenland")
 
