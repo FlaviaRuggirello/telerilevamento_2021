@@ -1,13 +1,14 @@
 # My code in R for remote sensing -> "#" serve per scrivere i commenti 
 
-# Chiamare la cartella "lab" in R - R lavora per funzioni quindi ci serve una funzione che dica al sistema che lavoriamo sempre con quella cartella 
+# Creare e Chiamare la cartella "lab" sul desktop per R - R lavora per funzioni quindi ci serve una funzione che dica al sistema che lavoriamo sempre con quella cartella 
 
 # install.packages("raster")
+#richiamo la librearia raster library(raster) senza virgolette perchè è dentro R
 
 # primo passaggio il settaggio della Working directory 
 #setwd("-/lab/")
 
-setwd("~/Desktop/lab") #io ho Mac 
+setwd("~/Desktop/lab") #io ho Mac - speghiamo a R dove andare a prendere oggetti
 
 
 # inseriamo ora i dati , prendiamo da R attraverso un altro comando i dati nella cartella 
@@ -17,15 +18,17 @@ setwd("~/Desktop/lab") #io ho Mac
 # "nome oggetto" <- brick ... ( controllare prima se sono funzioni interne o esterne a R - brick sta in rasterpackage )
 
 # richiamare prima il pacchetto 
-library("raster")
+library(raster)
 
+#brick è la funzione per creare un raster multistrato
 brick("p224r63_2011_masked.grd")
+
 
 # assegnare un nome 
 
 p224r63_2011 <- brick("p224r63_2011_masked.grd")
 
-# per vedere il file scrivo il nome e premo invio : rasterbrick , una serie di bnde in formato raster 
+# per vedere il file scrivo il nome e premo invio : rasterbrick , una serie di bande in formato raster 
 # impacchettamento - poi troviamo le dimensioni ( piccole ) - n° righe - n° colonne - calcolo pixel : righe per colonne 
 # milioni di pixel per ogni banda - risoluzione 30mt - estensione , ci sono le coordinate - SI 
 # sorgente , da dove lo ho preso - banda SRE (1) ecc ... fino alla (7) 
@@ -40,14 +43,14 @@ plot(p224r63_2011) #senza virgolette perchè è già in R e visualizzo le immagi
 
 ###DAY 2 lez. 17.03.2021
 
-# plottaggio singole bande 
+# plottaggio singole bande (LANDSAT)
 #colori plot 
 #B1 : BLUE
 #B2 : GREEN
 #B3 : RED 
-#B4 : NIR 
-#B5 
-#B6
+#B4 : NIR (INFRAROSSO VICINO)
+#B5 : INFRAROSSO TERMICO 
+#B6 : INFRAROSSO MEDIO , UN ALTRO
 
 # colorRampePalette () possiamo cambiare e definire i colori del plot - R relaziona colore con etichetta "label" imp le virgolette 
 
@@ -66,7 +69,7 @@ plot(p224r63_2011, col=cl)
 cl1 <- colorRampePalette (c("blue","yellow","grey")) (100)
 plot(p224r63_2011, col=cl) #immagine p..r immagine landsat - modis : mod... - file estensione nc derivano da un progrmma "Copernicus "
 
-
+#abbiamo visto esempi con colori doversi , belli !
 
 #### DAY 3 24.03.2021
 
@@ -119,8 +122,8 @@ plot(p224r63_2011, col=cls2)
 plot(p224r63_2011$B1_sre, col=cls2)
 dev.off()
 
-#funzione PAR - è una funzione generica - serve per fare un settaggio dei parametri grafici , di un graf che vigliamo creare 
-#possiamo plottare accanto l'immagine del B1 (banda blue ) e B2 (banda verde) - staimo facendo multiframe 
+#funzione PAR - è una funzione generica - serve per fare un settaggio dei parametri grafici , di un graf che vogliamo creare 
+#possiamo plottare accanto l'immagine del B1 (banda blue ) e B2 (banda verde) - stiamo facendo multiframe 
 # MultiFrame MF. 
 #Faremo poi sistema con una riga e due colonne , quindi MF = c( 1,2 ) , "c" è vettore
 # quindi grafici con una disposizione che useremo sempre 
@@ -131,7 +134,7 @@ plot(p224r63_2011$B2_sre) #plotbanda verde
 
 #PAR ci fa mettere le imagini come vogliamo noi in pratica 
 
-
+#esempio
 par(mfrow=c(1,2))
 plot(p224r63_2011$B1_sre)
 plot(p224r63_2011$B2_sre)
@@ -303,4 +306,26 @@ plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist")
 
 #preso dal mio R 
 
+#DVI del 1988 e del 2011
+dvi1988<-p224r63_1988$B4_sre - p224r63_1988$B3_sre  
+
+#Il DVI  si calcola con NIR-RED quindi utilizzeremo la banda del NIR e quella del RED
+dvi2011<-p224r63_2011$B4_sre - p224r63_2011$B3_sre
+
+par(mfrow=c(2,1))         
+plot(dvi1988) 
+plot(dvi2011)
+
+cldvi<-colorRampPalette(c('red', 'orange', 'yellow')) (100)   
+
+#Definiamo dei colori con colorRampPalette
+par(mfrow=c(2,1))                                             
+plot(dvi1988, col=cldvi)
+plot(dvi2011, col=cldvi)
+
+#Differenza nel tempo quindi 2011-1988
+
+difdvi<-dvi2011- dvi1988
+cldif<-colorRampPalette(c('blue', 'white', 'red'))(100)
+plot(difdvi, col=cldif)
 
