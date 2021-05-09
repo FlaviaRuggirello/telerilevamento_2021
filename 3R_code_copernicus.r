@@ -13,9 +13,9 @@ setwd("~/Desktop/lab")
 
 #dobbiamo dare un nome al dataset " ALBEDO " , caricihiamo un singolo strato al momento funzione raster 
 
-albedo <- raster("
+albedo <- raster("c_gls_ALBH_202006130000_GLOBE_PROBAV_V1.5.1.nc")
 
-#rasterlayer pixel al minimo - risoluzione in coord geo no in metri ma in gradi - sistema di riferimento wgs84
+"#rasterlayer pixel al minimo - risoluzione in coord geo no in metri ma in gradi - sistema di riferimento wgs84
 #elissoide. tutte le info 
 
 #scegliamo ColorRampePalette 
@@ -24,7 +24,12 @@ cl <- colorRampPalette(c('light blue','green','red','yellow'))(100)
 
 cl <- colorRampPalette(c('light blue','green','red','yellow'))(100) 
 
-plot(albed, col=cl)
+plot(albed0, col=cl)
 
 #possiamo diminuire la risoluzione
+
+#resampling 
+
+albedores <- aggregate(albedo, fact=100) #cos'è aggregate -> funzione generica per raggruppamento di data frame?
+plot(albedores, col=cl)
 
