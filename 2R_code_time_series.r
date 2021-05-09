@@ -1,12 +1,12 @@
 #Time series analysis
-#Greenland increase temperature
+#Greenland increase of temperature
 #Data and code from Emanuela Cosma 
 
 setwd("~/Desktop/lab/greenland")
 
 #che pacchetti utilizzeremo???
 
-# install.packages("raster")
+# install.packages("raster") vanno sempre messi prima della setwd
 library(raster)
 
 #oggi utilizzaremo dati sulla tempertura e dati sullo strato della groenlandia 
@@ -14,10 +14,11 @@ library(raster)
 #Primo carichiamo pacchetto raster 
 #choose Directory
 
-#STACK -> importante cerca 
+#STACK -> la funzione stack è usata per trasformare dati disponibili come colonne separate in un data frame o lista avente una singola colonna 
+#che può essere utilizzato nello studio dei modelli di varianza o altri modelli lineari
 
 #importiamo immagini funzione per singoli dati , no pacchetto : raster 
-#all'interno di pacchetto raster esisre funzione "raster" 
+#all'interno di pacchetto raster esiste funzione "raster" 
 #ciclo movimento iterativo di funzioni -> in informatica 
 
 lst_2000 <- raster("lst_2000.tif")
@@ -77,7 +78,10 @@ plotRGB(TGr, 1, 2, 3, stretch="Lin")
 
 #coloristRpackage -> ne parlerà
 
-#VENERDI' 9 SALTATO LEZIONE - MANCANO MIEI COMMENTI !!!!
+#VENERDI' 9 
+
+library(rasterVis)
+library(raster)
 
 levelplot(TGr)
 cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
@@ -85,16 +89,23 @@ levelplot(TGr, col.regions=cl)
 
 levelplot(TGr,col.regions=cl, names.attr=c("July 2000","July 2005", "July 2010", "July 2015"))
 
-levelplot(TGr,col.regions=cl, main="LST variation in time",
-          names.attr=c("July 2000","July 2005", "July 2010", "July 2015"))
+levelplot(TGr,col.regions=cl, main="LST variation in time",names.attr=c("July 2000","July 2005", "July 2010", "July 2015"))
 
 # Melt
+
+setwd("~/Desktop/lab")
+
 meltlist <- list.files(pattern="melt")
+
 melt_import <- lapply(meltlist,raster)
+
 melt <- stack(melt_import)
+
 melt
 
 levelplot(melt)
+
+#analisi multitemporale 
 
 melt_amount <- melt$X2007annual_melt - melt$X1979annual_melt
 
