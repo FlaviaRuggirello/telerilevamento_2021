@@ -18,7 +18,7 @@ library(raster)
 #che può essere utilizzato nello studio dei modelli di varianza o altri modelli lineari
 
 #importiamo immagini funzione per singoli dati , no pacchetto : raster 
-#all'interno di pacchetto raster esiste funzione "raster" 
+#all'interno di pacchetto raster esiste funzione "raster" per creare un'oggetto raster layer
 #ciclo movimento iterativo di funzioni -> in informatica 
 
 lst_2000 <- raster("lst_2000.tif")
@@ -43,9 +43,9 @@ plot(lst_2005)
 plot(lst_2010)
 plot(lst_2015)
 
-#lapply , è una funzione cge applico ad  un'altra  certa funzione (raster)a una lista di file , tutti assieme .
+#lapply , è una funzione che applico ad  un'altra  certa funzione (raster)a una lista di file , tutti assieme .
 
-#funzione list.files crea la lista di file a cui R poi applicherà Rapply 
+#funzione list.files crea la lista di file a cui R poi applicherà Lapply 
 
 #LIST OF FILE 
 #pattern spiega al software - cerca i file tramite nome 
@@ -69,7 +69,7 @@ plot(TGr)
 
 #potrei usare lapply, invece di usare raster metto plot 
 
-
+#creiao un file composto dalle T nei vari anni su un unica immagine
 
 plotRGB(TGr, 1, 2, 3, stretch="Lin")
 
@@ -80,11 +80,14 @@ plotRGB(TGr, 1, 2, 3, stretch="Lin")
 
 #VENERDI' 9 
 
-library(rasterVis)
+library(rasterVis) #Methods for enhanced aumentare la visualizzaione e interazione con i dati raster
 library(raster)
 
-levelplot(TGr)
-cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
+levelplot(TGr) #funzione levelpolt visione diversi livelli plot *****
+
+levelplot(TGr$list_2000) #il grafico , mostra l'andatura media per colonna e lo stesso a dx per riga 
+cl <- colorRampPalette(c("blue","light blue","pink","red"))(100) #immagine singole e non un immagine satellitare su vari livelli RGB
+
 levelplot(TGr, col.regions=cl)
 
 levelplot(TGr,col.regions=cl, names.attr=c("July 2000","July 2005", "July 2010", "July 2015"))
@@ -95,7 +98,7 @@ levelplot(TGr,col.regions=cl, main="LST variation in time",names.attr=c("July 20
 
 setwd("~/Desktop/lab")
 
-meltlist <- list.files(pattern="melt")
+meltlist <- list.files(pattern="melt") 
 
 melt_import <- lapply(meltlist,raster)
 
@@ -103,11 +106,11 @@ melt <- stack(melt_import)
 
 melt
 
-levelplot(melt)
+levelplot(melt) #grafico scioglimento ghiacciai 1979- 2007
 
 #analisi multitemporale 
 
-melt_amount <- melt$X2007annual_melt - melt$X1979annual_melt
+melt_amount <- melt$X2007annual_melt - melt$X1979annual_melt #sottrazione dati per vedere differenza 
 
 clb <- colorRampPalette(c("blue","white","red"))(100)
 plot(melt_amount, col=clb)
