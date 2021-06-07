@@ -34,7 +34,7 @@ p224r63_2011 <- brick("p224r63_2011_masked.grd")
 # sorgente , da dove lo ho preso - banda SRE (1) ecc ... fino alla (7) 
 # riflettanze 
 
-# visualizzare bande : funzione plot 
+# visualizzare bande per visualizzare valori di riflettanza : funzione plot 
 
 plot(p224r63_2011) #senza virgolette perchè è già in R e visualizzo le immagini 
 
@@ -56,7 +56,7 @@ plot(p224r63_2011) #senza virgolette perchè è già in R e visualizzo le immagi
 
 colorRampePalette(c("black","grey","light grey")) (100) #livelli scala di colori 
 
-#c () in R indica una serie di elementi -> vettore = array 
+#c () in R indica una serie di elementi -> vettore = array - argomento
 
 cl <- colorRampePalette(c("black","grey","light grey")) (100) #livelli scala di colori  , cl nome 
 
@@ -67,13 +67,13 @@ plot(p224r63_2011, col=cl)
 #esercizio cambiare colore 
 
 cl1 <- colorRampePalette (c("blue","yellow","grey")) (100)
-plot(p224r63_2011, col=cl) #immagine p..r immagine landsat - modis : mod... - file estensione nc derivano da un progrmma "Copernicus "
+plot(p224r63_2011, col=cl) #immagine p..r immagine landsat - modis : mod... - file estensione nc derivano da un programma "Copernicus "
 
 #abbiamo visto esempi con colori doversi , belli !
 
 #### DAY 3 24.03.2021
 
-#SELEZIONARE LA CARTELLA DI RIFERIMENTO 
+#SELEZIONARE LA CARTELLA DI RIFERIMENTO - prima andrebbero richiamate le librerie 
 
 setwd("~/Desktop/lab")
 
@@ -122,7 +122,7 @@ plot(p224r63_2011, col=cls2)
 plot(p224r63_2011$B1_sre, col=cls2)
 dev.off()
 
-#funzione PAR - è una funzione generica - serve per fare un settaggio dei parametri grafici , di un graf che vogliamo creare 
+#funzione PAR - è una funzione generica - serve per fare un settaggio dei parametri grafici (di un grafico che vogliamo creare)
 #possiamo plottare accanto l'immagine del B1 (banda blue ) e B2 (banda verde) - stiamo facendo multiframe 
 # MultiFrame MF. 
 #Faremo poi sistema con una riga e due colonne , quindi MF = c( 1,2 ) , "c" è vettore
@@ -175,7 +175,7 @@ plot(p224r63_2011$B4_sre, col=clnir)
 #oggi quindi abbiamo imparato come predisporre in maniera riassuntiva le immagini , come plottarle
 #con che colori ecc
 
-#26.03.2021
+# DAY 4 - 26.03.2021
 
 #Visualizzazione dati by RGB
 
@@ -198,7 +198,7 @@ setwd("~/Desktop/lab")
 #oggi queste importanti per il lavoro
 
 #schema RGB :Red Green Blue - 3 colori fondamentali per comporre gli altri .
-plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin") #immagine a colori naturali - "stretch=Lin " serve per gestire tutte le fasi dei colori 
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin") #immagine a colori naturali - "stretch=Lin " serve per gestire/visualizzare tutte le fasi dei colori 
 #quini R vedrà tutti i colori che vanno dal dark blue al light blue per esempio
 
 #utilizziamo altri colori
@@ -234,7 +234,8 @@ dev.off()
 #stretchhistogram 
 
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") #stretch lineare 
-plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist")plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #stretch più pro , al centro della foresta vediamo
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #stretch più pro , al centro della foresta vediamo - chiamata anche funzione logistica aumenta lo stretch e la possibilità di ciò che vediamo
 #un vero e proprio polmone - aree umide - zone più vegetative ecce
 
 #quindi abbiamo fatto diversi plot strecciati e ovviamente anche i PAR - così mettiamo ciò che abbiamo ottenito 
@@ -255,7 +256,7 @@ plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #COSì VEDIAMO LE COMPONENE
 
 install.packages("RStoolbox")
 
-#31.03.2021 - nuova lezione MULTITEMPORAL SET 
+#DAY 5- 31.03.2021 - nuova lezione MULTITEMPORAL SET 
 
 library(raster)
 setwd("~/Desktop/lab")
