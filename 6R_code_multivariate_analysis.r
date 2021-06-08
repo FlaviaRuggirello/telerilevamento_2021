@@ -7,6 +7,7 @@ setwd("~/lab/") # Linux
 # setwd("C:/lab/") # Windows
 # setwd("/Users/name/Desktop/lab/") # Mac 
 
+
 p224r63_2011 <- brick("p224r63_2011_masked.grd")
 
 plot(p224r63_2011)
