@@ -1,9 +1,12 @@
 #R_code_classification.r
 
+#processo che accorpa pixel con valori simili e rappresenta una classe 
+
 library(raster)
 library(RStoolbox)
 
-setwd("~/Desktop/lab") #settiamo la working directory 
+setwd("~/Desktop/lab") 
+#settiamo la working directory 
 
 #scarichiamo i dati - virtuale - immagine in lab - rappresenta livelli energetici diversi del sole 
 #carichiamo l'immagine 
@@ -44,7 +47,7 @@ plotRGB(so, 1, 2, 3, stretch="lin") livelli e strecciamo per far vedere tutti i 
 
 unsuperClass(so, nClasses=3)
 
-soc <- unsuperClass(so, nClasses=3)
+soc <- unsuperClass(so, nClasses=3) #crea in uscita il modelloe la mappa e le uniamo "$"
 
 plot(soc$map) #plottiamo
 
@@ -79,7 +82,7 @@ sunc <- unsuperClass( sun, nClasses=3)
 
 plot(sunc$map)
 
-#noize - cerca in internet 
+#noize - rumore immagine 
 
 #mask serve per nascondere "le nuvole" 
 
@@ -99,3 +102,5 @@ gcc2
 plot(gcc2$map)
 gcc4 <- unsuperClass(gc, nClasses=4)
 plot(gcc4$map)
+
+#rifatto stesso procedimento di prima
