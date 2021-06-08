@@ -15,7 +15,7 @@ setwd("~/Desktop/lab")
 
 albedo <- raster("c_gls_ALBH_202006130000_GLOBE_PROBAV_V1.5.1.nc")
 
-"#rasterlayer pixel al minimo - risoluzione in coord geo no in metri ma in gradi - sistema di riferimento wgs84
+#rasterlayer pixel al minimo - risoluzione in coord geo no in metri ma in gradi - sistema di riferimento wgs84
 #elissoide. tutte le info 
 
 #scegliamo ColorRampePalette 
@@ -30,6 +30,7 @@ plot(albed0, col=cl)
 
 #resampling 
 
-albedores <- aggregate(albedo, fact=100) #cos'è aggregate -> funzione generica per raggruppamento di data frame?
+albedores <- aggregate(albedo, fact=100) #cos'è aggregate -> funzione generica per raggruppamento di data frame
+#serve per gestirlo meglio - media pixel più piccoli contenuti 
 plot(albedores, col=cl)
 
