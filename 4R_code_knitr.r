@@ -25,4 +25,4 @@ getwd() #per controllare la cartella di lavoro
 #Per fare questo utilizziamo la funzione stitch dove per prima cosa metteremo il nome del file di testo che abbiamo creato
 stitch("greenland.r", template = system.file("misc", "knitr-template.Rnw", package="knitr"))
 
-#overleaf- 
+#overleaf per creare PDF
