@@ -8,7 +8,7 @@ library(gridExtra) # per plottare insieme ggplot
 #install.packages("viridis")
 library(viridis) # serve per colorare i plot automaticamente
 
-setwd("/lab/")
+setwd("~/Desktop/lab")
 
 sent <- brick("sentinel.png") # portiamo dentro R l'immagine che abbiamo scaricato del ghiacciao del Similaun
 
