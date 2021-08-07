@@ -8,7 +8,7 @@ library(RStoolbox) # per il calcolo degli indici di vegetazione
 # per l'indice NDVI del pianeta
 library(rasterVis)
 
-setwd("C:/lab/")
+setwd("~/Desktop/lab")
 
 defor1<-brick("defor1.jpg")
 defor2<-brick("defor2.jpg")
