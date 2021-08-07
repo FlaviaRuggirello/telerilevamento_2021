@@ -432,7 +432,7 @@ levelplot(TGr,col.regions=cl, names.attr=c("July 2000","July 2005", "July 2010",
 
 levelplot(TGr,col.regions=cl, main="LST variation in time",names.attr=c("July 2000","July 2005", "July 2010", "July 2015"))
 
-# Melt
+# Melt nome lista oggetti
 
 setwd("~/Desktop/lab")
 
@@ -725,131 +725,91 @@ plotRGB(p224r63_2011res_pca$map, r=1, g=2, b=3, stretch="lin")
 # R_code_vegetation_indices.r
 
 library(raster) # require(raster)
-library(RStoolbox) # for vegetation indices calculation 
+library(RStoolbox) # per il calcolo degli indici di vegetazione
 
-setwd("~/lab/") # Linux
+# install.packages("rasterdiv")
 
-# setwd("Desktop/lab/") # Mac
+# per l'indice NDVI del pianeta
+library(rasterVis)
 
-defor1 <- brick("defor1.jpg")
-defor2 <- brick("defor2.jpg")
+setwd("~/Desktop/lab")
 
-# b1 = NIR, b2 = red, b3 = green
+defor1<-brick("defor1.jpg")
+defor2<-brick("defor2.jpg")
+
+# b1= NIR, b2= red, b3= green
 
 par(mfrow=c(2,1))
 plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
-plotRGB(defor2, r=1, g=2, b=3, stretch="lin")
+plotRGB(defor2, r=1, g=2, b=3, stretch="lin") # vediamo le due immagine sulla stessa colonna, si nota la grande diminuzione di vegetazione della foresta amazzonica
 
-defor1
+# calcoliamo il primo indice di vegetazione
 
-# difference vegetation index
+defor1 # andiamo a vedere il nome delle bande aprendo tutte le informazioni del file e vediamo che il NIR si chiama defor1.1 e il RED defor1.2
 
-# time 1
-dvi1 <- defor1$defor1.1 - defor1$defor1.2
+dvi1 <- defoder1$defor1.1-defor1$defor1.2 # per ogni pixel prendiamo il valore nel NIR e sottraiamo il valore nel RED, si crea una mappa composta dalla differenza dei pixel = DVI
 
-# dev.off()
-plot(dvi1)
+plotdvi1
+cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) # specifichiamo lo schema dei colori in modo che si veda bene la vegetazione in rosso
 
-cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) # specifying a color scheme
+plot(dvi1, col=cl, main="DVI at time 1") # in questo modo visualizziamo il DVI che abbiamo appena calcolato
 
+# calcoliamo l'indice di vegetazione per la seconda immagine
+dvi2 <- defor2$defor2.1-defor2$defor2.2
+
+plotdvi2
+cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
+
+plot(dvi2, col=cl, main="DVI at time 2") # è ben visibile in giallo la parte in cui non è più presente vegetazione
+
+# mettiamo le due immagini a confronto
+par (mfrow=c(2,1))
 plot(dvi1, col=cl, main="DVI at time 1")
-
-# time 2
-dvi2 <- defor2$defor2.1 - defor2$defor2.2
-
 plot(dvi2, col=cl, main="DVI at time 2")
 
-par(mfrow=c(2,1))
-plot(dvi1, col=cl, main="DVI at time 1")
-plot(dvi2, col=cl, main="DVI at time 2")
+# Qual'è la differenza nella stessa zona tra questi due tempi? facciamo la differenza tra i DVI delle due situazioni
+difdvi <- dvi1 - dvi2 #facciamo la differenza per ogni pixel, anche se hanno estensione diversa viene calcolata la differenza dove è presente l'intersezione.
 
-difdvi <- dvi1 - dvi2
+plot(difdvi)
 
-# dev.off()
-cld <- colorRampPalette(c('blue','white','red'))(100) 
+cld <- colorRampPalette(c('blue','white','red'))(100)
 plot(difdvi, col=cld)
 
+# ndvi: facciamo la standardizzazione sulla somma dell'indice di vegetazione
+# NDVI= (NIR-RED) / (NIR+RED)
 
-# ndvi
-# (NIR-RED) / (NIR+RED)
 ndvi1 <- (defor1$defor1.1 - defor1$defor1.2) / (defor1$defor1.1 + defor1$defor1.2)
-plot(ndvi1, col=cl)
+# si potrebbe anche fare ndvi1 <- dvi1 / (defor1$defor1.1 + defor1$defor1.2)
 
-# ndvi1 <- dvi1 / (defor1$defor1.1 + defor1$defor1.2)
-# plot(ndvi1, col=cl)
+
+plot(ndvi1)
+cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
+
+plot(ndvi1, col=cl)
 
 ndvi2 <- (defor2$defor2.1 - defor2$defor2.2) / (defor2$defor2.1 + defor2$defor2.2)
 plot(ndvi2, col=cl)
 
-# ndvi1 <- dvi2 / (defor2$defor2.1 + defor1$defor2.2)
-# plot(ndvi2, col=cl)
-
-difndvi <- ndvi1 - ndvi2
-
-# dev.off()
-cld <- colorRampPalette(c('blue','white','red'))(100) 
-plot(difndvi, col=cld)
-
-
-# RStoolbox::spectralIndices
+# Rstoolbox: spectralIndices
+# si può usare la funzione spectralIndices che calcola diversi indici multrispettrali
 vi1 <- spectralIndices(defor1, green = 3, red = 2, nir = 1)
-plot(vi1, col=cl)
+plot (vi1, col=cl)
 
 vi2 <- spectralIndices(defor2, green = 3, red = 2, nir = 1)
-plot(vi2, col=cl)
+plot (vi2, col=cl)
 
-#5.05.2021
-#instal.packages(rastervid) - installiamo il pacchetto che serve per caricare --> troviamo un dataset gratuito (long term dataset )
-# library(rasterdiv) for the Worldwide NDVI
-#COS'è ndvi : 
+difndvi <- ndvi1 - ndvi2 # vediamo la differenza tra gli indici di vegetazione delle due immagini normalizzati
+cld <- colorRampPalette(c('blue','white','red'))(100)
+plot(difdvi, col=cld)
 
+# worldwilde NDVI
 plot(copNDVI)
 
-#plottiamo semplicemente il pacchetto e compare mappa con H2O
-
-copNDVI <- reclassify(copNDVI, cbind(253:255, NA))
+copNDVI <- reclassify(copNDVI, cbind(253:255, NA)) # per oscurare i valori dell'acqua che non ci interessano
 plot(copNDVI)
 
-library(rasterVis)
-
-# ndvi
-# (NIR-RED) / (NIR+RED)
-ndvi1 <- (defor1$defor1.1 - defor1$defor1.2) / (defor1$defor1.1 + defor1$defor1.2)
-plot(ndvi1, col=cl)
-
-# ndvi1 <- dvi1 / (defor1$defor1.1 + defor1$defor1.2)
-# plot(ndvi1, col=cl)
-
-ndvi2 <- (defor2$defor2.1 - defor2$defor2.2) / (defor2$defor2.1 + defor2$defor2.2)
-plot(ndvi2, col=cl)
-
-# ndvi1 <- dvi2 / (defor2$defor2.1 + defor1$defor2.2)
-# plot(ndvi2, col=cl)
-
-difndvi <- ndvi1 - ndvi2
-
-# dev.off()
-cld <- colorRampPalette(c('blue','white','red'))(100) 
-plot(difndvi, col=cld)
-
-
-# RStoolbox::spectralIndices
-vi1 <- spectralIndices(defor1, green = 3, red = 2, nir = 1)
-plot(vi1, col=cl)
-
-vi2 <- spectralIndices(defor2, green = 3, red = 2, nir = 1)
-plot(vi2, col=cl)
-
-# worldwide NDVI
-plot(copNDVI)
-
-
-# Pixels with values 253, 254 and 255 (water) will be set as NA’s.
-copNDVI <- reclassify(copNDVI, cbind(253:255, NA))
-plot(copNDVI)
-
-# rasterVis package needed:
-levelplot(copNDVI)
+# è necessario richiamare il pacchetto rasterVis
+levelplot(copNDVI) # immagine che mostra i valori di biomassa della Terra
 
 ----------------------------------------------------------------------------------------------------------------------------
 
@@ -858,82 +818,96 @@ levelplot(copNDVI)
 # R_code_land_cover.r
 
 library(raster)
-library(RStoolbox) # classification
+library(RStoolbox) # per la classificazione
 # install.packages("ggplot2")
 library(ggplot2)
 # install.packages("gridExtra")
-library(gridExtra) # for grid.arrange plotting
+library(gridExtra)
 
-setwd("~/lab/") # Linux
-# setwd("C:/lab/") # Windows
-# setwd("/Users/name/Desktop/lab/") # Mac
+setwd("~/Desktop/lab")
 
-# NIR 1, RED 2, GREEN 3
+defor1<-brick("defor1.jpg")
+plotRGB(defor1, r=1, g=2, b=3, stretch= "lin") # plottiamo l'immagine in RGB
 
-defor1 <- brick("defor1.jpg")
-plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
-ggRGB(defor1, r=1, g=2, b=3, stretch="lin")
+# necessari i pacchetti "RStoolbox" e "ggplot"
+ggRGB(defor1, r=1, g=2, b=3, stretch= "lin") # creiamo un immagine singola delle 3 bande
 
-defor2 <- brick("defor2.jpg")
-plotRGB(defor2, r=1, g=2, b=3, stretch="lin")
-ggRGB(defor2, r=1, g=2, b=3, stretch="lin")
+defor2<-brick("defor2.jpg")
+ggRGB(defor2, r=1, g=2, b=3, stretch= "lin") # facciamo lo stesso procedimento con la seconda immagine
 
+# mettiamo a confronto le due immagini
 par(mfrow=c(1,2))
 plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
 plotRGB(defor2, r=1, g=2, b=3, stretch="lin")
 
-# multiframe with ggplot2 and gridExtra
-p1 <- ggRGB(defor1, r=1, g=2, b=3, stretch="lin")
-p2 <- ggRGB(defor2, r=1, g=2, b=3, stretch="lin")
-grid.arrange(p1, p2, nrow=2)
+# per fare un multiframe delle due immagini con ggplot2 bisogna utilizzare la funzione "grid.arrange"
+# necessario installare "gridExtra"
 
-# unsupervised classification
+# diamo un nome a ciascuno plot e poi li mettiamo insieme
+p1 <- ggRGB(defor1, r=1, g=2, b=3, stretch= "lin")
+p2 <- ggRGB(defor2, r=1, g=2, b=3, stretch= "lin")
+
+grid.arrange(p1,p2, nrow=2)
+
+# classificazione non supervisionata, garantisce di non agire in modo soggettivo
 d1c <- unsuperClass(defor1, nClasses=2)
-plot(d1c$map)
-# class 1: forest
-# class 2: agriculture
 
-# set.seed() would allow you to attain the same results ...
+d1c
+plot(d1c$map) 
+# classe 1 agricola
+# classe 2 foresta
+# set.seed() per permetterti di ottenere gi stessi risultati
 
 d2c <- unsuperClass(defor2, nClasses=2)
-plot(d2c$map)
-# class 1: agriculture
-# class 2: forest
+
+d2c
+plot(d2c$map) 
+# classe 1 agricola
+# classe 2 foresta
 
 d2c3 <- unsuperClass(defor2, nClasses=3)
-plot(d2c3$map)
+plot(d2c3$map) 
+# classe 3 foresta
+# classe 1 e 2 due tipi diversi di coltivazione
 
-# frequencies
-freq(d1c$map)
-#   value  count
-# [1,]     1 306583
-# [2,]     2  34709
+# frequenze
+freq(d1c$map) # calcola l afrequenza di delle due classi nella mappa che abbiamo generato
+# value  count
+# [1,]     1  33575
+# [2,]     2 307717
 
-s1 <- 306583 + 34709
+s1 <- 33575 + 307717
 
-prop1 <- freq(d1c$map) / s1
-# prop forest: 0.8983012
-# prop agriculture: 0.1016988
+prop1 <- freq(d1c$map) / s1 # calcoliamo la proporzione delle frequenze
+# prop coltivazioni agricole: 0.09837617
+# prop foresta: 0.90162383
 
 s2 <- 342726
 prop2 <- freq(d2c$map) / s2
-# prop forest: 0.5206958
-# prop agriculture: 0.4793042
+# prop coltivazioni agricole: 0.4769174
+# prop foresta: 0.5230826
+
+# si possono anche calcolare le percentuali moltiplicando per cento
 
 # build a dataframe
-cover <- c("Forest","Agriculture")
-percent_1992 <- c(89.83, 10.16)
-percent_2006 <- c(52.06, 47.93)
+# facciamo una tabella che contenga questi risultati
+cover <- c("Forest", "Agriculture") # prima colonna. Siccome è un vettore di due diversi blocchi devo mettere "c"
+percent_1992 <- c(90.16, 9.84)
+percent_2006 <- c(52.31, 47.69)
 
-percentages <- data.frame(cover, percent_1992, percent_2006)
-percentages
+percentages <- data.frame (cover, percent_1992, percent_2006)
+#    cover percent_1992 percent_2006
+# 1      Forest        90.16        52.31
+# 2 Agriculture         9.84        47.69
 
-# let's plot them!
-ggplot(percentages, aes(x=cover, y=percent_1992, color=cover)) + geom_bar(stat="identity", fill="white")
-ggplot(percentages, aes(x=cover, y=percent_2006, color=cover)) + geom_bar(stat="identity", fill="white")
+# plottiamo con la funzione ggplot le percentuali di cover di foresta e coltivazioni
+ggplot(percentages, aes(x=cover, y=percent_1992, color=cover)) + geom_bar(stat="identity", fill="light blue")
 
-p1 <- ggplot(percentages, aes(x=cover, y=percent_1992, color=cover)) + geom_bar(stat="identity", fill="white")
-p2 <- ggplot(percentages, aes(x=cover, y=percent_2006, color=cover)) + geom_bar(stat="identity", fill="white")
+ggplot(percentages, aes(x=cover, y=percent_2006, color=cover)) + geom_bar(stat="identity", fill="light blue")
+
+# creiamo un unico grafico
+p1 <- ggplot(percentages, aes(x=cover, y=percent_1992, color=cover)) + geom_bar(stat="identity", fill="light blue")
+p2 <- ggplot(percentages, aes(x=cover, y=percent_2006, color=cover)) + geom_bar(stat="identity", fill="light blue")
 
 grid.arrange(p1, p2, nrow=1)
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -941,92 +915,99 @@ grid.arrange(p1, p2, nrow=1)
 #NONO CODICE
 
 # R_code_variability.r
-
-#scegliamo le librerie che ci servono - viridis per gestione dei colori - le altre le conosco
+# Analizziamo pattern spaziali tramite l’uso di indici del paesaggio nell’area del ghiacciao del Similaun
 
 library(raster)
 library(RStoolbox)
+library(ggplot2) # per ploottare ggplot
+library(gridExtra) # per plottare insieme ggplot
+#install.packages("viridis")
+library(viridis) # serve per colorare i plot automaticamente
 
-setwd("/lab/")
+setwd("~/Desktop/lab")
 
-brick("sentinel.png") #prendo l'immagine da fuori R e gli do un nome 
+sent <- brick("sentinel.png") # portiamo dentro R l'immagine che abbiamo scaricato del ghiacciao del Similaun
 
-sent <- brick("sentinel.png")
+plotRGB(sent, stretch="lin") # non dobbiamo specificare in che colore mettere le bande perchè sono già r=1, g=2, b=3 dove NIR 1, RED 2, GREEN 3
 
-plotRGB(sent)
+plotRGB(sent, r=2, g=1, b=3, stretch="lin") # viene mostrata la componente rocciosa in viola, la vegetazione in verde e acqua in nero perchè assorbe il NIR
 
-#NIR 1, RED 2, GREEN 3
-
-# r=1, g=2, b=3
-
-plotRGB(sent,r=1, g=2, b=3, stretch= "lin")
-
+# calcoliamo l'indice NDVI e calcoliamo la varibilità dell'immagine
+sent # per vedere come si chiamano le bande
+# rinominiamo e leghiamo le bande all'immagine
 nir <- sent$sentinel.1
 red <- sent$sentinel.2
- 
-ndvi <- (nir-red) / (nir+red)
-plot(ndvi)
 
-cl <- colorRampPalette(c('black','white','red','magenta','green'))(100) # 
-plot(ndvi,col=cl)
+ndvi <- (nir-red)/ (nir+red)
+plot(ndvi) # dove è presente il bianco non c'è vegetazione, marroncino rappresenta la roccia, giallo e verde chiaro è la vegetazione 
 
-ndvisd3 <- focal(ndvi, w=matrix(1/9, nrow=3, ncol=3), fun=sd)
+cl<- clorRampPalette(c('black', 'white', 'red', 'magenta', 'green'))(100)
+plot(ndvi, col=cl)
+
+# calcoliamo la deviazione standard di questa immagine
+ndvisd3 <- focal(ndvi, w=matrix(1/9, nrow=3, ncol=3), fun=sd) # w= window. prendiamo una finestra di 3x3 pixel
 plot(ndvisd3)
 
-clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) #
-plot(ndvisd3, col=clsd)
+clsd <- colorRampPalette(c('blue', 'green', 'pink', 'magenta', 'orange', 'brown', 'red', 'yellow'))(100)
+plot(ndvisd3, col=clsd) # la deviazione standard del NDVI è più bassa dove è presente la roccia nuda ed aumenta in corrispondenza del passaggio alla vegetazione per poi diminuire di nuovo nelle parti vegetate
 
-# mean ndvi with focal
+# calcoliamo la media del ndvi con focal
 ndvimean3 <- focal(ndvi, w=matrix(1/9, nrow=3, ncol=3), fun=mean)
-clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) # 
-plot(ndvimean3, col=clsd)
 
-ndvisd5 <- focal(ndvi, w=matrix(1/25, nrow=5, ncol=5), fun=sd)
-clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) # 
-plot(ndvisd5, col=clsd)
+clsd <- colorRampPalette(c('blue', 'green', 'pink', 'magenta', 'orange', 'brown', 'red', 'yellow'))(100)
+plot(ndvimean3, col=clsd) # media per 3 pixel. si ottengono valori molti alti nelle praterie di alta quota e per la parte seminaturale. valori più bassi per la roccia nuda
 
-sentpca <- rasterPCA(sent)
+# cambiamo la finestra: 11x11 pixel
+ndvisd11 <- focal(ndvi, w=matrix(1/121, nrow=11, ncol=11), fun=sd) 
+clsd <- colorRampPalette(c('blue', 'green', 'pink', 'magenta', 'orange', 'brown', 'red', 'yellow'))(100)
+plot(ndvisd11, col=clsd) # se ho un immagine con dettagli molto alti è meglio usare una finestra più piccola. finestre troppo grandi rischiano di omogenizzare il risultato.
 
-plot(sentpca$map)
+# cambiamo la finestra: 5x5 pixel
+ndvisd5 <- focal(ndvi, w=matrix(1/25, nrow=5, ncol=5), fun=sd) # situazione ideale per identicare le variazioni della deviazione standard
+clsd <- colorRampPalette(c('blue', 'green', 'pink', 'magenta', 'orange', 'brown', 'red', 'yellow'))(100)
+plot(ndvisd5, col=clsd)         
 
-summary(sentpca$model)
+# PCA: analisi multivariata su tutto il dataset e poi prendiamo la PC1 (unico strato) per fare una finestra e calcolare una mappa di deviazione standard
+sentpca <- rasterPCA(sent) # fa l'analisi dei componenit principali per il raster
+plot(sentpca$map) # la prima componente mantiene il range di iniformazione più alto. passando alle PC successive l'informazione si perde
 
-# the first PC contains 67.36804% of the original information
+sentpca # $call= funzione che abbiamo usato. $model= princomp(cor = spca, comvmat = covMat[[1]]). cor= correlazione, covmat= matrice di covarianza. $map : RasterBrick 
+
+summary(sentpca$model) # per vedere quanta variabilità iniziale spiegano le singole componenti
+# la prima PC spiega il 0.6736804 dell'informazione originale.
 
 pc1 <- sentpca$map$PC1
+pc1_5 <- focal(pc1, w=matrix(1/25, nrow=5, ncol=5), fun=sd)
+clsd <- colorRampPalette(c('blue', 'green', 'pink', 'magenta', 'orange', 'brown', 'red', 'yellow'))(100)
+plot(pc1_5, col=clsd) # molto ben visibile la variabilità del paesaggio
 
-pc1sd5 <- focal(pc1, w=matrix(1/25, nrow=5, ncol=5), fun=sd)
-clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) # 
-plot(pc1sd5, col=clsd)
 
+#con la funzione source si possono caricare codici presi da fuori
+source("source_test_lezione.r.txt") # abbiamo preso un pezzo di codice scaricandolo come documento di testo e lo abbiamo aperto direttamente con R
 # pc1 <- sentpca$map$PC1
 # pc1sd7 <- focal(pc1, w=matrix(1/49, nrow=7, ncol=7), fun=sd)
 # plot(pc1sd7)
+source("source_ggplot.r.txt")
 
-# With the source function you can upload code from outside!
-source("source_test_lezione.r")
-source("source_ggplot.r")
-
-# https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html
-# The package contains eight color scales: “viridis”, the primary choice, and five alternatives with similar properties - “magma”, “plasma”, “inferno”, “civids”, “mako”, and “rocket” -, and a rainbow color map - “turbo”.
-
+# facciamo un plottaggio con ggplot, metodo migliore per individuare discontinuità a livello geografico, a livello geologico serve per individuare variabilità geomorfologica e a livello ecologico serve a individuare variabilità ecologica (ecotoni)
 p1 <- ggplot() +
-geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
-scale_fill_viridis()  +
+geom_raster(pc1_5, mapping = aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis() + # non specifichiamo il tipo di legenda viridis
 ggtitle("Standard deviation of PC1 by viridis colour scale")
 
+# cambiamo il tipo di legenda per i colori
 p2 <- ggplot() +
-geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
-scale_fill_viridis(option = "magma")  +
+geom_raster(pc1_5, mapping = aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis(option="magma") + 
 ggtitle("Standard deviation of PC1 by magma colour scale")
 
 p3 <- ggplot() +
-geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
-scale_fill_viridis(option = "turbo")  +
+geom_raster(pc1_5, mapping = aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis(option="turbo") + 
 ggtitle("Standard deviation of PC1 by turbo colour scale")
 
-grid.arrange(p1, p2, p3, nrow = 1)
-
+# per ottenere i 3 plot con le legende e posso confrontare le diverse legende dei colori
+grid.arrange(p1, p2, p3, nrow=1)
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #DECIMO CODICE
