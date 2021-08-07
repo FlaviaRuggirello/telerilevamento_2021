@@ -7,7 +7,7 @@ library(ggplot2)
 # install.packages("gridExtra")
 library(gridExtra)
 
-setwd("C:/lab/")
+setwd("~/Desktop/lab")
 
 defor1<-brick("defor1.jpg")
 plotRGB(defor1, r=1, g=2, b=3, stretch= "lin") # plottiamo l'immagine in RGB
