@@ -1102,39 +1102,11 @@ plot(PC1sd, col=cls)
 
 
 > install.packages("ncdf4")
---- Please select a CRAN mirror for use in this session ---
-provo con l'URL 'https://cran.stat.unipd.it/bin/macosx/contrib/4.0/ncdf4_1.17.tgz'
-Content type 'application/octet-stream' length 2284788 bytes (2.2 MB)
-==================================================
-downloaded 2.2 MB
-
-
-The downloaded binary packages are in
-	/var/folders/xl/xdt1txg96_12j93nc3sypl600000gn/T//RtmpLZhb7A/downloaded_packages 
 
 #Installo pacchetto «ncdf4» ci serve per vedere i file .nc scaricati da Copernicus
 
 > install.packages("raster")
 also installing the dependencies ‘sp’, ‘Rcpp’
-
-provo con l'URL 'https://cran.stat.unipd.it/bin/macosx/contrib/4.0/sp_1.4-5.tgz'
-Content type 'application/octet-stream' length 1846583 bytes (1.8 MB)
-==================================================
-downloaded 1.8 MB
-
-provo con l'URL 'https://cran.stat.unipd.it/bin/macosx/contrib/4.0/Rcpp_1.0.7.tgz'
-Content type 'application/octet-stream' length 3203784 bytes (3.1 MB)
-==================================================
-downloaded 3.1 MB
-
-provo con l'URL 'https://cran.stat.unipd.it/bin/macosx/contrib/4.0/raster_3.4-13.tgz'
-Content type 'application/octet-stream' length 4241838 bytes (4.0 MB)
-==================================================
-downloaded 4.0 MB
-
-
-The downloaded binary packages are in
-	/var/folders/xl/xdt1txg96_12j93nc3sypl600000gn/T//RtmpLZhb7A/downloaded_packages
 
 #installo pacchetto «raster» entrambi i pacchetti mi servono per caricare le immagini nel software 
 
@@ -1163,49 +1135,14 @@ Carico il pacchetto richiesto: sp
 
 
 > heet2018
-class      : RasterLayer 
-dimensions : 3584, 8064, 28901376  (nrow, ncol, ncell)
-resolution : 0.04464286, 0.04464286  (x, y)
-extent     : -180.0223, 179.9777, -79.97768, 80.02232  (xmin, xmax, ymin, ymax)
-crs        : +proj=longlat +pm=0 +a=6378137 +rf=298.257232666016 
-source     : c_gls_LST_201801180100_GLOBE_GEO_V1.2.1.nc 
-names      : LST.Error.Bar 
-z-value    : 0 
-zvar       : ERRORBAR_LST 
+
 
 > heet2019
-class      : RasterLayer 
-dimensions : 3584, 8064, 28901376  (nrow, ncol, ncell)
-resolution : 0.04464286, 0.04464286  (x, y)
-extent     : -180.0223, 179.9777, -79.97768, 80.02232  (xmin, xmax, ymin, ymax)
-crs        : +proj=longlat +pm=0 +a=6378137 +rf=298.257232666016 
-source     : c_gls_LST_201901180100_GLOBE_GEO_V1.2.1.nc 
-names      : LST.Error.Bar 
-z-value    : 0 
-zvar       : ERRORBAR_LST 
 
 
 > heet2020
-class      : RasterLayer 
-dimensions : 3584, 8064, 28901376  (nrow, ncol, ncell)
-resolution : 0.04464286, 0.04464286  (x, y)
-extent     : -180.0223, 179.9777, -79.97768, 80.02232  (xmin, xmax, ymin, ymax)
-crs        : +proj=longlat +pm=0 +a=6378137 +rf=298.257232666016 
-source     : c_gls_LST_202001180200_GLOBE_GEO_V1.2.1.nc 
-names      : LST.Error.Bar 
-z-value    : 2020-01-18 
-zvar       : ERRORBAR_LST 
 
 > heet2021
-class      : RasterLayer 
-dimensions : 3584, 8064, 28901376  (nrow, ncol, ncell)
-resolution : 0.04464286, 0.04464286  (x, y)
-extent     : -180.0223, 179.9777, -79.97768, 80.02232  (xmin, xmax, ymin, ymax)
-crs        : +proj=longlat +pm=0 +a=6378137 +rf=298.257232666016 
-source     : c_gls_LST_202101180100_GLOBE_GEO_V1.2.1.nc 
-names      : LST.Error.Bar 
-z-value    : 2021-01-18 
-zvar       : ERRORBAR_LST 
 
 #creiamo una  palette di colori per osservare meglio la variazione di temperatura 
 
