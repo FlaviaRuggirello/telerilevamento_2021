@@ -1101,17 +1101,17 @@ plot(PC1sd, col=cls)
 #CODICE ESAME 
 
 
-> install.packages("ncdf4")
+install.packages("ncdf4")
 
 #Installo pacchetto «ncdf4» ci serve per vedere i file .nc scaricati da Copernicus
 
-> install.packages("raster")
+install.packages("raster")
 also installing the dependencies ‘sp’, ‘Rcpp’
 
 #installo pacchetto «raster» entrambi i pacchetti mi servono per caricare le immagini nel software 
 
-> library(ncdf4)
-> library(raster)
+library(ncdf4)
+library(raster)
 Carico il pacchetto richiesto: sp
 
 #con library richiamo i pacchetti scaricati precedentemente per poterli usare 
@@ -1119,11 +1119,11 @@ Carico il pacchetto richiesto: sp
 
 #Impostiamo la cartella di destinazione dove sono presenti I dati di interesse precedentemente scaricati
 
-> setwd("~/Desktop/esameTelerilevamento") #dico a R dove recuperare I file 
-> heet2018<- raster("c_gls_LST_201801180100_GLOBE_GEO_V1.2.1.nc")
-> heet2019<- raster("c_gls_LST_201901180100_GLOBE_GEO_V1.2.1.nc")
-> heet2020<- raster("c_gls_LST_202001180200_GLOBE_GEO_V1.2.1.nc")
-> heet2021<- raster("c_gls_LST_202101180100_GLOBE_GEO_V1.2.1.nc")
+setwd("~/Desktop/esameTelerilevamento") #dico a R dove recuperare I file 
+heet2018<- raster("c_gls_LST_201801180100_GLOBE_GEO_V1.2.1.nc")
+heet2019<- raster("c_gls_LST_201901180100_GLOBE_GEO_V1.2.1.nc")
+heet2020<- raster("c_gls_LST_202001180200_GLOBE_GEO_V1.2.1.nc")
+heet2021<- raster("c_gls_LST_202101180100_GLOBE_GEO_V1.2.1.nc")
 
 #importo le immagini che visualizzo grazie al pacchetto raster e alle quali do ciascuna un nome per facilitare anche il 
 #richiamo e il plottaggio
@@ -1134,73 +1134,68 @@ Carico il pacchetto richiesto: sp
 #funzione stack -> blocco di file tutti assieme è usata per trasformare dati disponibili come colonne separate in unico dataframe
 
 
-> heet2018
-
-
-> heet2019
-
-
-> heet2020
-
-> heet2021
+heet2018
+heet2019
+heet2020
+heet2021
 
 #creiamo una  palette di colori per osservare meglio la variazione di temperatura 
 
-> clA<- colorRampPalette(c("light blue","pink","purple"))(100)
+clA<- colorRampPalette(c("light blue","pink","purple"))(100)
 
 # e creo un grafico per visualizzare il tutto#PAR ci fa disporre le immagini come vogliamo noi 
 #plot funzione ci fa il plottaggio delle immagini
-> par(mfrow=c(2,2))
-> plot(heet2018,col=clA, main = "Anno 2018")
-> plot(heet2019,col=clA, main = "Anno 2019")
-> plot(heet2020,col=clA, main = "Anno 2020")
-> plot(heet2021,col=clA, main = "Anno 2021")
+par(mfrow=c(2,2))
+plot(heet2018,col=clA, main = "Anno 2018")
+plot(heet2019,col=clA, main = "Anno 2019")
+plot(heet2020,col=clA, main = "Anno 2020")
+plot(heet2021,col=clA, main = "Anno 2021")
 #al valore 1 viene assegnato il valore minimo mentre al valore 4 viene assegnato il valore massimo 
 
 
 #iniziamo classificando le immagini per poi confrontarle successivamente 
 #per farlo abbiamo bisogno di una nuova libreria RStoolbox
 #installo la libreria 
->install.packages(«RStoolbox») #serve per il calcolo di indici di vegetazione 
+install.packages(«RStoolbox») #serve per il calcolo di indici di vegetazione 
 #creiamo una nuova Palette di colori
 #iniziamo classificando le nostre immagini, per farlo necessitiamo della libreria Rstoolbox
 
->library(RStoolbox)
+library(RStoolbox)
 
 #creiamo una nuova palette di colori 
->clB <- colorRampPalette(c(«pink»,»red»))(100)
+clB <- colorRampPalette(c(«pink»,»red»))(100)
 
 #classifichiamo le immagini del 2018 e del 2021 per poi metterle a confronto successivamente
 #Il numero di classi che useremo saranno 2, una per il freddo ed una per il caldo
 
-                                 >h2018 <- unsuperClass(heet2018 , nClasses =2)
-                                     >plot(h2018$map,col=clB, main = "Anno 2018")
-                                         >h2021 <- unsuperClass(heet2021 , nClasses =2)
-                                             >plot(h2021$map,col=clB, main = "Anno 2021")              
- > par(mfrow=c(1,1))
+h2018 <- unsuperClass(heet2018 , nClasses =2)
+plot(h2018$map,col=clB, main = "Anno 2018")
+h2021 <- unsuperClass(heet2021 , nClasses =2)
+plot(h2021$map,col=clB, main = "Anno 2021")              
+par(mfrow=c(1,1))
 
 #frequenza delle 2 mappe per calcolare la percentuale delle zone fredde e delle zone calde
->freq(h2018$map)
+freq(h2018$map)
 value    count
 [1,]     1  2034436 Freddo
 [2,]     2   613943   Caldo
 [3,]    NA 26252997 
 Totale2018 <- (613943+2034436)
->freq((h2021$map))
+freq((h2021$map))
  value    count
 [1,]     1  2024248
 [2,]     2   590022
 [3,]    NA 26287106
-Totate2021<- 
+Totate2021<- (2024248+590022)
 #percentuali
-> percent2018 <- freq(h2018$map)*100/Totale2018
-> percent2018
+percent2018 <- freq(h2018$map)*100/Totale2018
+percent2018
 value     count
 [1,] 3.775895e-05  23.18184
 [2,] 7.551789e-05  76.81816
 [3,]           NA 991.28550
-> percent2021 <- freq(h2021$map)*100/Totale2021
-> percent2021
+percent2021 <- freq(h2021$map)*100/Totale2021
+percent2021
             value      count
 [1,] 3.825160e-05   22.56928
 [2,] 7.650319e-05   77.43072
@@ -1209,31 +1204,31 @@ value     count
 #creiamo una nuova tabella con i valori del 2018 e del 2021
 
 
->cover <- c("cold","heet")
->before <- c(2034436,613943)
->after <-  c(2024248,590022)
->output <- data.frame(cover,before,after)
->View(output)
+cover <- c("cold","heet")
+before <- c(2034436,613943)
+after <-  c(2024248,590022)
+output <- data.frame(cover,before,after)
+View(output)
 
 #per ottenere un grafico più dettagliato usiamo la libreria ggplot2 che appartiene a RStoolbox
 
->library(ggplot2)
+library(ggplot2)
 
->Grafic1 <- ggplot(output, aes(x=cover,y=before, color=cover))+geom_bar(stat = "identity",fill="white")
+Grafic1 <- ggplot(output, aes(x=cover,y=before, color=cover))+geom_bar(stat = "identity",fill="white")
 
->plot(Grafic1)
+plot(Grafic1)
 
->Grafic2 <- ggplot(output, 
+Grafic2 <- ggplot(output, 
 aes(x=cover,y=after,color=cover))+geom_bar(stat = "identity",fill="white")
 
->plot(Grafic2)
+plot(Grafic2)
 
 #la libreria grid extra invece ci andrà a mettere i 2 grafici ottenuti nella stessa immagine
 #grid.arrange compone come più ci piace il multiframe 
 
-             >library(gridExtra)
+library(gridExtra)
 
->grid.arrange(Grafic1,Grafic2, nrow=1) #nrow= riga
+grid.arrange(Grafic1,Grafic2, nrow=1) #nrow= riga
 
 #FINE
 
