@@ -1106,13 +1106,15 @@ install.packages("ncdf4")
 #Installo pacchetto «ncdf4» ci serve per vedere i file .nc scaricati da Copernicus
 
 install.packages("raster")
-also installing the dependencies ‘sp’, ‘Rcpp’
+
+#also installing the dependencies ‘sp’, ‘Rcpp’
 
 #installo pacchetto «raster» entrambi i pacchetti mi servono per caricare le immagini nel software 
 
 library(ncdf4)
 library(raster)
-Carico il pacchetto richiesto: sp
+
+#Carico il pacchetto richiesto: sp
 
 #con library richiamo i pacchetti scaricati precedentemente per poterli usare 
 #nel pacchetto raster è compreso il pacchetto sp , dati di tipo vettoriale usa le classi definite nel pacchetto sp
@@ -1120,6 +1122,7 @@ Carico il pacchetto richiesto: sp
 #Impostiamo la cartella di destinazione dove sono presenti I dati di interesse precedentemente scaricati
 
 setwd("~/Desktop/esameTelerilevamento") #dico a R dove recuperare I file 
+
 heet2018<- raster("c_gls_LST_201801180100_GLOBE_GEO_V1.2.1.nc")
 heet2019<- raster("c_gls_LST_201901180100_GLOBE_GEO_V1.2.1.nc")
 heet2020<- raster("c_gls_LST_202001180200_GLOBE_GEO_V1.2.1.nc")
@@ -1143,19 +1146,23 @@ heet2021
 
 clA<- colorRampPalette(c("light blue","pink","purple"))(100)
 
-# e creo un grafico per visualizzare il tutto#PAR ci fa disporre le immagini come vogliamo noi 
+# e creo un grafico per visualizzare il tutto
+#PAR ci fa disporre le immagini come vogliamo noi 
 #plot funzione ci fa il plottaggio delle immagini
+
 par(mfrow=c(2,2))
 plot(heet2018,col=clA, main = "Anno 2018")
 plot(heet2019,col=clA, main = "Anno 2019")
 plot(heet2020,col=clA, main = "Anno 2020")
 plot(heet2021,col=clA, main = "Anno 2021")
+
 #al valore 1 viene assegnato il valore minimo mentre al valore 4 viene assegnato il valore massimo 
 
 
 #iniziamo classificando le immagini per poi confrontarle successivamente 
 #per farlo abbiamo bisogno di una nuova libreria RStoolbox
 #installo la libreria 
+
 install.packages(«RStoolbox») #serve per il calcolo di indici di vegetazione 
 #creiamo una nuova Palette di colori
 #iniziamo classificando le nostre immagini, per farlo necessitiamo della libreria Rstoolbox
@@ -1229,6 +1236,35 @@ plot(Grafic2)
 library(gridExtra)
 
 grid.arrange(Grafic1,Grafic2, nrow=1) #nrow= riga
+
+
+rlist<-list.files(pattern = ".nc") 
+
+#carico tutte le immagini in un unica soluzione 
+
+listafinale<-lapply(rlist, raster)
+
+heet<-stack(listafinale)
+
+clC<-colorRampPalette(c("blue","red"))(100)
+#nuova color palette che decido io 
+
+plot(heet, col=clC)
+
+#plotto tutte le immagini 
+
+ext<- c(6,20,30,50)
+
+#funzione zoom , che appartiene al pacchetto raster 
+
+zoom(heet$LST.Error.Bar.1,ext)
+zoom(heet$LST.Error.Bar.2,ext)
+zoom(heet$LST.Error.Bar.3,ext)
+zoom(heet$LST.Error.Bar.4,ext)
+
+
+
+
 
 #FINE
 
