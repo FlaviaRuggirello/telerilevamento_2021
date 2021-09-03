@@ -1,3 +1,286 @@
+#PROGETTO ESAME ANALISI MULTITEMPORALE 2021
+
+install.packages("ncdf4")
+
+#Installo pacchetto «ncdf4» ci serve per vedere i file .nc scaricati da Copernicus
+
+install.packages("raster")
+
+#installo pacchetto «raster» entrambi i pacchetti mi servono per caricare le immagini nel software
+
+ library(ncdf4)
+ library(raster)
+
+#con library richiamo i pacchetti scaricati precedentemente per poterli usare 
+#nel pacchetto raster è compreso il pacchetto sp , dati di tipo vettoriale usa le classi definite nel pacchetto sp
+#Impostiamo la cartella di destinazione dove sono presenti I dati di interesse precedentemente scaricati
+
+setwd("~/Desktop/esameTelerilevamento") 
+
+#dico a R dove recuperare I file 
+
+heet2018<- raster("c_gls_LST_201801180100_GLOBE_GEO_V1.2.1.nc")
+heet2019<- raster("c_gls_LST_201901180100_GLOBE_GEO_V1.2.1.nc")
+heet2020<- raster("c_gls_LST_202001180200_GLOBE_GEO_V1.2.1.nc")
+heet2021<- raster("c_gls_LST_202101180100_GLOBE_GEO_V1.2.1.nc")
+
+
+#importo le immagini che visualizzo grazie al pacchetto raster e alle quali do ciascuna un nome per facilitare anche il 
+#richiamo e il plottaggio
+#visualizzo le immagini e i dettagli
+#Si potrebbero caricare tutte le immagini di tipo .nc in blocco  
+#list.file(pattern=«.nc») spiega al software tramite nome o tipologia 
+#successivamente funzione lapply che  serve per associare la lista di immagini che abbiamo creato a un altro oggetto
+#funzione stack -> blocco di file tutti assieme, è usata per trasformare dati disponibili come colonne separate in unico dataframe
+
+heet2018 
+heet2019
+heet2020
+heet2021 
+
+#richiamo le immagini scaricate e osservo le informazioni
+
+#creiamo una  palette di colori per osservare meglio la variazione di temperatura 
+
+clA<- colorRampPalette(c("light blue","pink","purple"))(100)
+
+#creo un grafico per visualizzare il tutto
+#PAR ci fa disporre le immagini come vogliamo noi 
+#plot funzione ci fa il plottaggio delle immagini
+
+par(mfrow=c(2,2))
+plot(heet2018,col=clA, main = "Anno 2018")
+plot(heet2019,col=clA, main = "Anno 2019")
+plot(heet2020,col=clA, main = "Anno 2020")
+plot(heet2021,col=clA, main = "Anno 2021")
+
+#al valore 1 viene assegnato il valore minimo mentre al valore 4 viene assegnato il valore massimo 
+
+#iniziamo classificando le immagini per poi confrontarle successivamente 
+#per farlo abbiamo bisogno di una nuova libreria RStoolbox
+#installo la libreria 
+install.packages(«RStoolbox») 
+
+#serve per il calcolo di indici di vegetazione 
+#creiamo una nuova Palette di colori
+#iniziamo classificando le nostre immagini, per farlo necessitiamo della libreria Rstoolbox
+#quindi richiamo la libreria 
+
+library(RStoolbox)
+
+#creiamo una nuova palette di colori 
+clB <- colorRampPalette(c(«pink»,»red»))(100)
+
+#classifichiamo le immagini del 2018 e del 2021 per poi metterle a confronto successivamente
+#Il numero di classi che useremo saranno 2, una per il freddo ed una per il caldo
+
+h2018 <- unsuperClass(heet2018 , nClasses =2)
+plot(h2018$map,col=clB, main = "Anno 2018")
+h2021 <- unsuperClass(heet2021 , nClasses =2)
+plot(h2021$map,col=clB, main = "Anno 2021")                        
+
+par(mfrow=c(1,2))
+
+#unsuperClass classificazione non supervisionata , non definiamo a monte le classi lasciamo fare al software do due classi
+
+#$ questo simbolo serve per unire - attaccare
+
+#frequenza delle 2 mappe per calcolare la percentuale delle zone fredde e delle zone calde
+
+freq(h2018$map)
+value    count
+[1,]     1  2034436 Freddo
+[2,]     2   613943   Caldo
+[3,]    NA 26252997 
+Totale2018 <- (613943+2034436)
+
+freq((h2021$map))
+ value    count
+[1,]     1  2024248
+[2,]     2   590022
+[3,]    NA 26287106
+Totate2021<- (2024248+590022)
+
+#percentuali
+
+percent2018 <- freq(h2018$map)*100/Totale2018
+
+percent2018
+value     count
+[1,] 3.775895e-05  23.18184
+[2,] 7.551789e-05  76.81816
+[3,]           NA 991.28550
+
+percent2021 <- freq(h2021$map)*100/Totale2021
+
+percent2021
+            value      count
+[1,] 3.825160e-05   22.56928
+[2,] 7.650319e-05   77.43072
+[3,]           NA 1005.52376
+
+#creiamo una nuova tabella con i valori del 2018 e del 2021
+
+cover <- c("cold","heet")
+before <- c(2034436,613943)
+after <-   c(2024248,590022)
+output <- data.frame(cover,before,after)
+View(output)
+
+
+#per ottenere un grafico più dettagliato usiamo la libreria ggplot2
+
+library(ggplot2)
+
+Grafic1 <- ggplot(output, aes(x=cover,y=before, color=cover))+geom_bar(stat = "identity",fill="white")
+
+plot(Grafic1)
+
+Grafic2 <- ggplot(output, 
+aes(x=cover,y=after,color=cover))+geom_bar(stat = "identity",fill="white")
+
+plot(Grafic2)
+
+#la libreria grid extra invece ci andrà a mettere i 2 grafici ottenuti nella stessa immagine
+#grid.arrange compone come più ci piace il multiframe 
+
+library(gridExtra)
+
+grid.arrange(Grafic1,Grafic2, nrow=1) 
+        
+#nrow= riga
+
+#setto nuovamente la working directory 
+
+setwd("~/Desktop/esameTelerilevamento/immaginiCopernicus/heet")
+
+#carico i miei file tutti assieme , sempre le immagini inciaziali di Copernicus «.nc»
+
+rlist<-list.files(pattern = ".nc")
+ 
+listafinale<-lapply(rlist, raster)
+
+#precedentemente ho aggiunto le immagini in una nuova cartella definita «heet»
+
+heet<-stack(listafinale)
+
+#pacchetto che fa parte di sp – raster
+
+install.packages("rgdal")
+
+#richiamo la libreria 
+
+library(rgdal)
+
+#plotto le immagini con la palette di colori iniziale plot(heet, col= clA)
+ #osservo le immagini
+
+heet
+
+#scelgo le coordinate che rappresentano la zona italiana
+
+ext<- c(6,20,30,50)
+
+#applichiamo uno zoom dell’area per ogni immagine
+ 
+zoom(heet&LST.Error.Bar.1,ext)
+zoom(heet&LST.Error.Bar.2,ext)
+zoom(heet&LST.Error.Bar.3,ext)
+zoom(heet&LST.Error.Bar.4,ext)
+
+#successivamente andiamo a tagliare la zona interessata creando una nuova immagine , funzione crop
+
+
+ITA18<- crop(heet$LST.Error.Bar.1,ext)
+ITA19<- crop(heet$LST.Error.Bar.2,ext)
+ITA20<- crop(heet$LST.Error.Bar.3,ext)
+ITA21<- crop(heet$LST.Error.Bar.4,ext)
+
+#visualizziamo le immagini tutte insieme
+
+par(mfrow=c(2,2))
+
+plot(ITA18,col=clA, main="2018")
+plot(ITA19,col=clA, main="2019")
+plot(ITA20,col=clA, main="2020")
+plot(ITA21,col=clA, main="2021")
+
+#creo una nuova palette per rappresentare lo zoom e il confronto sull’italia 
+
+clC<- colorRampPalette(c("orange","red"))(100)
+
+#plotto e metto sulla stessa linea 
+
+par(mfrow=c(1,2))
+
+plot(ITA18M$map,col=clC, main="01-01-2018")
+plot(ITA21M$map,col=clC, main="01-01-2021")
+
+#ricalcolo le frequenze come ho fatto precedentemente 
+
+
+freq(ITA18M$map)
+     value count
+[1,]     1 25440
+[2,]     2 26178
+[3,]    NA 88606
+
+
+freq(ITA21M$map)
+     value count
+[1,]     1 29684
+[2,]     2 16951
+[3,]    NA 93589
+
+totITA18M<- 25440+26178
+totITA21M<- 29684+16951
+
+percent2018 <- freq(ITA18M$map)*100/totITA18M
+
+
+percent2018
+           value     count
+[1,] 0.001937309  49.28513
+[2,] 0.003874617  50.71487
+[3,]          NA 171.65717
+
+percent2021 <- freq(ITA21M$map)*100/totITA21M
+
+percent2021
+value     count
+[1,] 0.002144312  63.65176
+[2,] 0.004288624  36.34824
+[3,]          NA 200.68404
+
+cover <- c("cold","heet")
+before <- c(25440,26178)
+after <-   c(29684,16951)
+output <- data.frame(cover,before,after)
+View(output)
+
+
+#sempre un analisi dei dati graficamente 
+
+library(ggplot2)
+
+Grafic3 <- ggplot(output, aes(x=cover,y=before, color=cover))+geom_bar(stat = "identity",fill="white")
+
+plot(Grafic3)
+
+Grafic4 <- ggplot(output, aes(x=cover,y=after,color=cover))+geom_bar(stat = "identity",fill="white")
+
+plot(Grafic4)
+
+library(gridExtra)
+
+grid.arrange(Grafic3,Grafic4, nrow=1)
+
+
+#FINE PROGETTO 
+
+
+
+
 #PRIMO CODICE
 
 # My code in R for remote sensing -> "#" serve per scrivere i commenti 
@@ -1097,173 +1380,6 @@ plotRGB(EN_pca$map, r=1, g=2, b=3, stretch="lin") # gran parte dell'informazione
 PC1sd <- focal(EN_pca$map$PC1, w=matrix(1/9, nrow=3, ncol=3), fun=sd)
 plot(PC1sd, col=cls)
 ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-#CODICE ESAME 
-
-
-install.packages("ncdf4")
-
-#Installo pacchetto «ncdf4» ci serve per vedere i file .nc scaricati da Copernicus
-
-install.packages("raster")
-
-#also installing the dependencies ‘sp’, ‘Rcpp’
-
-#installo pacchetto «raster» entrambi i pacchetti mi servono per caricare le immagini nel software 
-
-library(ncdf4)
-library(raster)
-
-#Carico il pacchetto richiesto: sp
-
-#con library richiamo i pacchetti scaricati precedentemente per poterli usare 
-#nel pacchetto raster è compreso il pacchetto sp , dati di tipo vettoriale usa le classi definite nel pacchetto sp
-
-#Impostiamo la cartella di destinazione dove sono presenti I dati di interesse precedentemente scaricati
-
-setwd("~/Desktop/esameTelerilevamento") #dico a R dove recuperare I file 
-
-heet2018<- raster("c_gls_LST_201801180100_GLOBE_GEO_V1.2.1.nc")
-heet2019<- raster("c_gls_LST_201901180100_GLOBE_GEO_V1.2.1.nc")
-heet2020<- raster("c_gls_LST_202001180200_GLOBE_GEO_V1.2.1.nc")
-heet2021<- raster("c_gls_LST_202101180100_GLOBE_GEO_V1.2.1.nc")
-
-#importo le immagini che visualizzo grazie al pacchetto raster e alle quali do ciascuna un nome per facilitare anche il 
-#richiamo e il plottaggio
-#visualizzo le immagini e i dettagli
-#Si potrebbero caricare tutte le immagini di tipo .nc in blocco  
-#list.file(pattern=«.nc») spiega al software tramite nome o tipologia 
-#successivamente funzione lapply che  serve per associare la lista di immagini che abbiamo creato a un altro oggetto
-#funzione stack -> blocco di file tutti assieme è usata per trasformare dati disponibili come colonne separate in unico dataframe
-
-
-heet2018
-heet2019
-heet2020
-heet2021
-
-#creiamo una  palette di colori per osservare meglio la variazione di temperatura 
-
-clA<- colorRampPalette(c("light blue","pink","purple"))(100)
-
-# e creo un grafico per visualizzare il tutto
-#PAR ci fa disporre le immagini come vogliamo noi 
-#plot funzione ci fa il plottaggio delle immagini
-
-par(mfrow=c(2,2))
-plot(heet2018,col=clA, main = "Anno 2018")
-plot(heet2019,col=clA, main = "Anno 2019")
-plot(heet2020,col=clA, main = "Anno 2020")
-plot(heet2021,col=clA, main = "Anno 2021")
-
-#al valore 1 viene assegnato il valore minimo mentre al valore 4 viene assegnato il valore massimo 
-
-
-#iniziamo classificando le immagini per poi confrontarle successivamente 
-#per farlo abbiamo bisogno di una nuova libreria RStoolbox
-#installo la libreria 
-
-install.packages(«RStoolbox») #serve per il calcolo di indici di vegetazione 
-#creiamo una nuova Palette di colori
-#iniziamo classificando le nostre immagini, per farlo necessitiamo della libreria Rstoolbox
-
-library(RStoolbox)
-
-#creiamo una nuova palette di colori 
-clB <- colorRampPalette(c(«pink»,»red»))(100)
-
-#classifichiamo le immagini del 2018 e del 2021 per poi metterle a confronto successivamente
-#Il numero di classi che useremo saranno 2, una per il freddo ed una per il caldo
-
-h2018 <- unsuperClass(heet2018 , nClasses =2)
-plot(h2018$map,col=clB, main = "Anno 2018")
-h2021 <- unsuperClass(heet2021 , nClasses =2)
-plot(h2021$map,col=clB, main = "Anno 2021")              
-par(mfrow=c(1,1))
-
-#frequenza delle 2 mappe per calcolare la percentuale delle zone fredde e delle zone calde
-freq(h2018$map)
-value    count
-[1,]     1  2034436 Freddo
-[2,]     2   613943   Caldo
-[3,]    NA 26252997 
-Totale2018 <- (613943+2034436)
-freq((h2021$map))
- value    count
-[1,]     1  2024248
-[2,]     2   590022
-[3,]    NA 26287106
-Totate2021<- (2024248+590022)
-#percentuali
-percent2018 <- freq(h2018$map)*100/Totale2018
-percent2018
-value     count
-[1,] 3.775895e-05  23.18184
-[2,] 7.551789e-05  76.81816
-[3,]           NA 991.28550
-percent2021 <- freq(h2021$map)*100/Totale2021
-percent2021
-            value      count
-[1,] 3.825160e-05   22.56928
-[2,] 7.650319e-05   77.43072
-[3,]           NA 1005.52376
-
-#creiamo una nuova tabella con i valori del 2018 e del 2021
-
-
-cover <- c("cold","heet")
-before <- c(2034436,613943)
-after <-  c(2024248,590022)
-output <- data.frame(cover,before,after)
-View(output)
-
-#per ottenere un grafico più dettagliato usiamo la libreria ggplot2 che appartiene a RStoolbox
-
-library(ggplot2)
-
-Grafic1 <- ggplot(output, aes(x=cover,y=before, color=cover))+geom_bar(stat = "identity",fill="white")
-
-plot(Grafic1)
-
-Grafic2 <- ggplot(output, 
-aes(x=cover,y=after,color=cover))+geom_bar(stat = "identity",fill="white")
-
-plot(Grafic2)
-
-#la libreria grid extra invece ci andrà a mettere i 2 grafici ottenuti nella stessa immagine
-#grid.arrange compone come più ci piace il multiframe 
-
-library(gridExtra)
-
-grid.arrange(Grafic1,Grafic2, nrow=1) #nrow= riga
-
-
-rlist<-list.files(pattern = ".nc") 
-
-#carico tutte le immagini in un unica soluzione 
-
-listafinale<-lapply(rlist, raster)
-
-heet<-stack(listafinale)
-
-clC<-colorRampPalette(c("blue","red"))(100)
-#nuova color palette che decido io 
-
-plot(heet, col=clC)
-
-#plotto tutte le immagini 
-
-ext<- c(6,20,30,50)
-
-#funzione zoom , che appartiene al pacchetto raster 
-
-zoom(heet$LST.Error.Bar.1,ext)
-zoom(heet$LST.Error.Bar.2,ext)
-zoom(heet$LST.Error.Bar.3,ext)
-zoom(heet$LST.Error.Bar.4,ext)
-
-
-
 
 
 #FINE
