@@ -15,7 +15,7 @@ install.packages("raster")
 #nel pacchetto raster è compreso il pacchetto sp , dati di tipo vettoriale usa le classi definite nel pacchetto sp
 #Impostiamo la cartella di destinazione dove sono presenti I dati di interesse precedentemente scaricati
 
-setwd("~/Desktop/esameTelerilevamento") 
+setwd("~/Desktop/esameTelerilevamento/immaginiCopernicus") 
 
 #dico a R dove recuperare I file 
 
@@ -59,7 +59,8 @@ plot(heet2021,col=clA, main = "Anno 2021")
 #iniziamo classificando le immagini per poi confrontarle successivamente 
 #per farlo abbiamo bisogno di una nuova libreria RStoolbox
 #installo la libreria 
-install.packages(«RStoolbox») 
+
+install.packages(«RStoolbox») 
 
 #serve per il calcolo di indici di vegetazione 
 #creiamo una nuova Palette di colori
@@ -69,19 +70,24 @@ plot(heet2021,col=clA, main = "Anno 2021")
 library(RStoolbox)
 
 #creiamo una nuova palette di colori 
+
 clB <- colorRampPalette(c(«pink»,»red»))(100)
 
 #classifichiamo le immagini del 2018 e del 2021 per poi metterle a confronto successivamente
 #Il numero di classi che useremo saranno 2, una per il freddo ed una per il caldo
 
+
 h2018 <- unsuperClass(heet2018 , nClasses =2)
+
 plot(h2018$map,col=clB, main = "Anno 2018")
+
 h2021 <- unsuperClass(heet2021 , nClasses =2)
+
 plot(h2021$map,col=clB, main = "Anno 2021")                        
 
 par(mfrow=c(1,2))
 
-#unsuperClass classificazione non supervisionata , non definiamo a monte le classi lasciamo fare al software do due classi
+#unsuperClass classificazione non supervisionata , non definiamo a monte le classi lasciamo fare al software dando due classi
 
 #$ questo simbolo serve per unire - attaccare
 
@@ -92,6 +98,7 @@ value    count
 [1,]     1  2034436 Freddo
 [2,]     2   613943   Caldo
 [3,]    NA 26252997 
+
 Totale2018 <- (613943+2034436)
 
 freq((h2021$map))
@@ -99,6 +106,7 @@ freq((h2021$map))
 [1,]     1  2024248
 [2,]     2   590022
 [3,]    NA 26287106
+
 Totate2021<- (2024248+590022)
 
 #percentuali
@@ -127,7 +135,6 @@ after <-   c(2024248,590022)
 output <- data.frame(cover,before,after)
 View(output)
 
-
 #per ottenere un grafico più dettagliato usiamo la libreria ggplot2
 
 library(ggplot2)
@@ -136,8 +143,7 @@ Grafic1 <- ggplot(output, aes(x=cover,y=before, color=cover))+geom_bar(stat = "i
 
 plot(Grafic1)
 
-Grafic2 <- ggplot(output, 
-aes(x=cover,y=after,color=cover))+geom_bar(stat = "identity",fill="white")
+Grafic2 <- ggplot(output, aes(x=cover,y=after,color=cover))+geom_bar(stat = "identity",fill="white")
 
 plot(Grafic2)
 
@@ -172,8 +178,11 @@ install.packages("rgdal")
 
 library(rgdal)
 
-#plotto le immagini con la palette di colori iniziale plot(heet, col= clA)
- #osservo le immagini
+#plotto le immagini con la palette di colori iniziale 
+
+plot(heet, col= clA)
+ 
+#osservo le immagini
 
 heet
 
@@ -274,6 +283,53 @@ plot(Grafic4)
 library(gridExtra)
 
 grid.arrange(Grafic3,Grafic4, nrow=1)
+
+#///////////////////////////////////////////////////////////////////////////////// PROVA DIFFERENTE MA STESSO FINE //////////////
+
+#carico tutte le immagini in un unica soluzione 
+
+
+listafinale<-lapply(rlist, raster)
+
+
+heet<-stack(listafinale) #nuova cartella dove ho messo le immagini 
+
+#rgdal pacchetto più richiamo la libreria 
+
+install.packages("rgdal")
+
+
+library(rgdal)
+
+
+Italia<- readOGR(dsn= "Italy_squared.shp") #OPPURE FUNZIONE SHAPEFILE()
+
+#shapefile italia creato con QGIS immagine scaricata dal geoportale nazionale avrei potuto utilizzare le funzioni
+
+#ext – zoom – crop appartenenti al pacchetto R
+
+
+PLOT1<- mask(crop(heet2018, Italia), Italia)  #POTEVO UTILIZZARE ANCHE CROP SENZA MASK 
+
+POLT2<- mask(crop(heet2019, Italia)), Italia)
+
+PLOT3<- mask(crop(heet2020, Italia), Italia)
+
+PLOT4<- mask(crop(heet2021, Italia), Italia)
+
+
+cl1<- colorRampPalette(c("pink","red","purple"))(100)
+
+
+plot(PLOT1, col=cl1, main="2018")
+
+plot(POLT2, col=cl1, main="2019")
+
+plot(PLOT3, col=cl1, main="2020")
+
+plot(PLOT4, col=cl1, main="2021")
+
+#VOLEVO PROVARE ALTERNATIVA - SPIEGARE AL PROF 
 
 
 #FINE PROGETTO 
