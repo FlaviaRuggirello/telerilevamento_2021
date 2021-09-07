@@ -58,7 +58,7 @@ plot(heet2021,col=clA, main = "Anno 2021")
 
 #iniziamo classificando le immagini per poi confrontarle successivamente 
 #per farlo abbiamo bisogno di una nuova libreria RStoolbox
-#installo la libreria 
+#installo pacchetto 
 
 install.packages(«RStoolbox») 
 
@@ -170,14 +170,6 @@ listafinale<-lapply(rlist, raster)
 
 heet<-stack(listafinale)
 
-#pacchetto che fa parte di sp – raster
-
-install.packages("rgdal")
-
-#richiamo la libreria 
-
-library(rgdal)
-
 #plotto le immagini con la palette di colori iniziale 
 
 plot(heet, col= clA)
@@ -192,13 +184,12 @@ ext<- c(6,20,30,50)
 
 #applichiamo uno zoom dell’area per ogni immagine
  
-zoom(heet&LST.Error.Bar.1,ext)
-zoom(heet&LST.Error.Bar.2,ext)
-zoom(heet&LST.Error.Bar.3,ext)
-zoom(heet&LST.Error.Bar.4,ext)
+zoom(heet$LST.Error.Bar.1,ext)
+zoom(heet$LST.Error.Bar.2,ext)
+zoom(heet$LST.Error.Bar.3,ext)
+zoom(heet$LST.Error.Bar.4,ext)
 
-#successivamente andiamo a tagliare la zona interessata creando una nuova immagine , funzione crop
-
+#successivamente andiamo a tagliare la zona interessata creando una nuova immagine , funzione crop
 
 ITA18<- crop(heet$LST.Error.Bar.1,ext)
 ITA19<- crop(heet$LST.Error.Bar.2,ext)
@@ -214,7 +205,11 @@ plot(ITA19,col=clA, main="2019")
 plot(ITA20,col=clA, main="2020")
 plot(ITA21,col=clA, main="2021")
 
+#andiamo ad effettuare gli stessi passaggi eseguiti in precedenza per l’analisi mondiale
 #creo una nuova palette per rappresentare lo zoom e il confronto sull’italia 
+
+ITA18M<- unsuperClass(ITA18,nClasses = 2)
+ITA21M<- unsuperClass(ITA21,nClasses = 2)
 
 clC<- colorRampPalette(c("orange","red"))(100)
 
@@ -227,44 +222,47 @@ plot(ITA21M$map,col=clC, main="01-01-2021")
 
 #ricalcolo le frequenze come ho fatto precedentemente 
 
-
 freq(ITA18M$map)
      value count
-[1,]     1 25440
-[2,]     2 26178
+[1,]     1 25440 
+[2,]     2 26178 
 [3,]    NA 88606
 
 
 freq(ITA21M$map)
      value count
-[1,]     1 29684
-[2,]     2 16951
+[1,]     1 29684 
+[2,]     2 16951 
 [3,]    NA 93589
 
 totITA18M<- 25440+26178
+
 totITA21M<- 29684+16951
 
 percent2018 <- freq(ITA18M$map)*100/totITA18M
 
-
 percent2018
            value     count
-[1,] 0.001937309  49.28513
+[1,] 0.001937309  49.28513 
 [2,] 0.003874617  50.71487
 [3,]          NA 171.65717
 
 percent2021 <- freq(ITA21M$map)*100/totITA21M
 
 percent2021
+
 value     count
 [1,] 0.002144312  63.65176
 [2,] 0.004288624  36.34824
 [3,]          NA 200.68404
 
 cover <- c("cold","heet")
+
 before <- c(25440,26178)
-after <-   c(29684,16951)
+after  <- c(29684,16951)
+
 output <- data.frame(cover,before,after)
+
 View(output)
 
 
@@ -334,8 +332,7 @@ plot(PLOT4, col=cl1, main="2021")
 
 #FINE PROGETTO 
 
-
-
+////////////////////////////////////////////////////////////////////////////////////////////
 
 #PRIMO CODICE
 
